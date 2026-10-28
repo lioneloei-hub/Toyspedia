@@ -1,0 +1,199 @@
+{% load humanize %}
+
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Shopping Cart</title>
+
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+
+		<style>
+			[data-theme="light"],
+			:root:not([data-theme="dark"]) {
+				--pico-primary: #d62828;
+				--pico-primary-background: #d62828;
+				--pico-primary-border: #d62828;
+				--pico-primary-hover: #b71c1c;
+				--pico-primary-hover-background: #b71c1c;
+				--pico-primary-hover-border: #b71c1c;
+				--pico-primary-focus: rgba(214, 40, 40, 0.25);
+				--pico-primary-inverse: #fff;
+			}
+
+			.cart-item {
+				display: grid;
+				grid-template-columns: 100px 1fr auto;
+				gap: 1.5rem;
+				align-items: center;
+			}
+
+			.cart-item img {
+				width: 100px;
+				height: 100px;
+				object-fit: contain;
+			}
+
+			.cart-item h3 {
+				margin-bottom: 0.25rem;
+			}
+
+			.cart-item p {
+				margin-bottom: 0.25rem;
+			}
+
+			.subtotal {
+				text-align: right;
+			}
+
+			.cart-total {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-top: 2rem;
+				padding-top: 1rem;
+				border-top: 1px solid var(--pico-muted-border-color);
+			}
+
+			.cart-total strong {
+				font-size: 1.25rem;
+			}
+
+			@media (max-width: 768px) {
+				.cart-item {
+					grid-template-columns: 80px 1fr;
+				}
+
+				.cart-item img {
+					width: 80px;
+					height: 80px;
+				}
+
+				.subtotal {
+					grid-column: 2;
+					text-align: left;
+				}
+			}
+	
+			.quantity-controls {
+					display: flex;
+					align-items: center;
+					gap: 0.75rem;
+					margin-top: 0.75rem;
+			}
+
+			.quantity-controls button {
+					width: 2.5rem;
+					margin: 0;
+					padding: 0.35rem;
+			}
+
+			.quantity-controls span {
+					min-width: 1.5rem;
+					text-align: center;
+					font-weight: bold;
+			}
+
+			.cart-item form {
+					margin-bottom: 0.5rem;
+			}
+
+			.cart-item form button {
+					margin-bottom: 0;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<main class="container">
+			<header>
+				<h1>Shopping Cart</h1>
+				<a href="{% url 'product_list' %}"> ← Continue Shopping </a>
+			</header>
+
+			{% for item in cart.items.all %}
+
+			<article class="cart-item">
+				<img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+
+				<div>
+					<h3>{{ item.product.name }}</h3>
+
+					<p>Rp {{ item.product.price|floatformat:0|intcomma }}</p>
+
+					
+				<form
+						action="{% url 'cart_update' item.id %}"
+						method="post"
+				>
+						{% csrf_token %}
+
+						<div class="quantity-controls">
+								<button
+										type="submit"
+										name="action"
+										value="decrease"
+										class="secondary"
+										{% if item.quantity <= 1 %}disabled{% endif %}
+								>
+										−
+								</button>
+
+								<span>{{ item.quantity }}</span>
+
+								<button
+										type="submit"
+										name="action"
+										value="increase"
+										{% if item.quantity >= item.product.stock %}disabled{% endif %}
+								>
+										+
+								</button>
+						</div>
+				</form>
+
+				<form
+						action="{% url 'cart_remove' item.id %}"
+						method="post"
+				>
+						{% csrf_token %}
+
+						<button type="submit" class="outline contrast">
+								Remove
+						</button>
+				</form>
+
+				</div>
+
+				<div class="subtotal">
+					<strong> Rp {{ item.subtotal|floatformat:0|intcomma }} </strong>
+				</div>
+			</article>
+
+			{% empty %}
+
+			<p>Your cart is empty.</p>
+
+			{% endfor %} 
+      
+      {% if cart.items.all %}
+			<div class="cart-total">
+				<strong>Total</strong>
+
+				<strong> Rp {{ total|floatformat:0|intcomma }} </strong>
+			</div>
+
+            <div style="margin-top: 1.5rem;">
+					<a href="{% url 'checkout' %}" role="button">
+							Proceed to Checkout
+					</a>
+			</div>
+			{% endif %}
+		</main>
+	</body>
+</html>

@@ -1,0 +1,157 @@
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+
+    <title>{{ product.name }}</title>
+
+    <style>
+        [data-theme="light"],
+        :root:not([data-theme="dark"]) {
+            --pico-primary: #d62828;
+            --pico-primary-background: #d62828;
+            --pico-primary-border: #d62828;
+            --pico-primary-hover: #b71c1c;
+            --pico-primary-hover-background: #b71c1c;
+            --pico-primary-hover-border: #b71c1c;
+            --pico-primary-focus: rgba(214, 40, 40, 0.25);
+            --pico-primary-inverse: #fff;
+        }
+
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+        }
+
+        .product-info h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .category {
+            color: var(--pico-muted-color);
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+      	.stock {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.stock strong {
+				color: #198754;
+			}
+
+			.stock small {
+				color: var(--pico-muted-color);
+			}
+
+			.back-link {
+				margin-bottom: 2rem;
+			}
+      .add-to-cart {
+				width: 100%;
+				margin-top: 1rem;
+			}
+
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+            }
+
+            .product-image {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+            <nav>
+				<ul>
+					<li>
+						<a href="{% url 'product_list' %}"> ← Back to Products </a>
+					</li>
+				</ul>
+
+				<ul>
+					<li>
+						<a href="{% url 'cart' %}" role="button"> 🛒 Cart </a>
+					</li>
+				</ul>
+			</nav>
+
+        <div class="product-detail">
+
+            <div>
+                <img
+                    class="product-image"
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+            </div>
+
+            <div class="product-info">
+
+                <p class="category">
+                    {{ product.category.name }}
+                </p>
+
+                <h1>{{ product.name }}</h1>
+
+                <p class="price">
+                    Rp {{ product.price|floatformat:0|intcomma }}
+                </p>
+
+                {% if error %}
+						<p style="color: #d62828;">{{ error }}</p>
+				{% endif %}
+
+               	<div class="stock">
+						{% if product.stock > 0 %}
+						<strong>Available</strong>
+						<small>Stock: {{ product.stock }}</small>
+						{% else %}
+						<strong>Out of Stock</strong>
+						{% endif %}
+					       </div>
+
+                {% if product.stock > 0 %}
+                 <form method="post">
+						{% csrf_token %}
+						<button type="submit" class="add-to-cart">Add to Cart</button>
+					</form>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

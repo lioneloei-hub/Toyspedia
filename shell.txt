@@ -1,0 +1,89 @@
+ctrl + J
+python -m venv .venv
+.venv\Scripts\activate
+which python
+python -m pip install "Django>=5.2,<5.3"
+python -m django --version
+django-admin startproject config .
+python manage.py runserver
+python manage.py startapp store
+python manage.py check
+python manage.py migrate
+python manage.py check
+python manage.py runserver
+python manage.py check
+python -m pip install Pillow
+python -m pip show Pillow
+python manage.py check
+python manage.py makemigrations store
+python manage.py migrate
+python manage.py check
+python manage.py shell
+>>>
+Sqlite Viewer
+exit()
+python manage.py makemigrations store
+python manage.py migrate
+python manage.py shell
+
+>>> Activate .venv on mac
+source .venv/bin/activate
+
+>>> Activate .venv on windows
+.venv\Scripts\activate.bat
+.venv\Scripts\Activate.ps1
+
+>> Must Run 
+check error : python manage.py check
+run app : python manage.py runserver
+127.0.0.1:8000/admin
+127.0.0.1:8000/products
+
+python manage.py shell
+from store.models import Product
+Product.objects.values("id", "name", "created_at")
+python manage.py makemigrations store
+exit()
+
+
+python manage.py migrate
+python manage.py check
+
+
+====access the shell======
+python manage.py shell
+from store.models import Product
+Product.objects.values("id", "name", "created_at")
+
+http://127.0.0.1:8000/products/
+
+Product.objects.filter(is_active=True).count()
+Product.objects.update(is_active=True)
+Product.objects.filter(is_active=True).count()
+
+python manage.py shell
+from store.models import Product
+Product.objects.values("name", "image")
+
+http://127.0.0.1:8000/media/products/Charizard_Ex.png
+
+http://127.0.0.1:8000/products/?category=pokemon-cards 
+http://127.0.0.1:8000/products/?category=lego 
+http://127.0.0.1:8000/products/?category=gundam 
+
+http://127.0.0.1:8000/products/charizard-ex/
+http://127.0.0.1:8000/products/charizard-ex/
+
+python manage.py createsuperuser
+admin
+admin@mail.com
+root1234
+
+TEST CART & CART ITEM THROUGH shell
+python manage.py shell
+
+from django.contrib.auth.models import User
+from store.models import Cart, CartItem, Product
+
+CTRL + B (Hide sidebar)
+CTRL + J (Hide Terminal)

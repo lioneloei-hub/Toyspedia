@@ -1,0 +1,252 @@
+
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout | Toyspedia</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+
+    <style>
+        :root {
+            --pico-primary: #d62828;
+            --pico-primary-background: #d62828;
+            --pico-primary-border: #d62828;
+            --pico-primary-hover: #b51f1f;
+            --pico-primary-hover-background: #b51f1f;
+            --pico-primary-hover-border: #b51f1f;
+        }
+
+        body {
+            background-color: #f8f8f8;
+        }
+
+        main.container {
+            max-width: 850px;
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        .brand {
+            color: #d62828;
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .page-title {
+            margin-bottom: 0.5rem;
+        }
+
+        .muted {
+            color: #777;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .item-details p {
+            margin-bottom: 0.3rem;
+        }
+
+        .item-subtotal {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .total-row {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #d62828;
+        }
+
+        .checkout-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .checkout-actions a,
+        .checkout-actions button {
+            margin-bottom: 0;
+        }
+
+        .notice {
+            background: #fff4e5;
+            border-left: 4px solid #d62828;
+            padding: 1rem;
+            border-radius: 0.25rem;
+        }
+
+        @media (max-width: 480px) {
+            .order-item {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .item-subtotal {
+                text-align: left;
+            }
+
+            .checkout-actions {
+                flex-direction: column;
+            }
+
+            .checkout-actions a,
+            .checkout-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+
+        <!-- Navigation -->
+        <nav>
+            <ul>
+                <li>
+                    <a href="{% url 'product_list' %}" class="brand">
+                        Toyspedia
+                    </a>
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    <a href="{% url 'cart' %}">
+                        ← Back to Cart
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Heading -->
+        <header>
+            <h1 class="page-title">Checkout</h1>
+            <p class="muted">
+                Review your items before placing your order.
+            </p>
+        </header>
+
+        <!-- Django Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <article>
+                    {{ message }}
+                </article>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Order Items -->
+        <section>
+            <h2>Order Summary</h2>
+
+            {% for item in items %}
+                <article class="order-item">
+                    <div class="item-details">
+                        <strong>{{ item.product.name }}</strong>
+
+                        <p class="muted">
+                            {{ item.quantity }} ×
+                            Rp {{ item.product.price|floatformat:0|intcomma }}
+                        </p>
+                    </div>
+
+                    <div class="item-subtotal">
+                        <small>Subtotal</small>
+                        <p>
+                            <strong>
+                                Rp {{ item.subtotal|floatformat:0|intcomma }}
+                            </strong>
+                        </p>
+                    </div>
+                </article>
+            {% empty %}
+                <article>
+                    Your cart is empty.
+                    <a href="{% url 'product_list' %}">
+                        Continue shopping
+                    </a>
+                </article>
+            {% endfor %}
+        </section>
+
+        <!-- Total -->
+        {% if items %}
+            <article>
+                <div class="summary-row">
+                    <span>Items</span>
+                    <span>{{ items|length }} line item(s)</span>
+                </div>
+
+                <hr>
+
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span>
+                        Rp {{ total|floatformat:0|intcomma }}
+                    </span>
+                </div>
+
+                <p class="muted">
+                    Shipping costs are not included in this demo.
+                </p>
+            </article>
+
+            <!-- Confirm Order -->
+            <div class="notice">
+                <strong>Ready to order?</strong>
+                <p>
+                    Confirm your order to save it to the system and update
+                    product stock. This action cannot be undone from this page.
+                </p>
+            </div>
+
+            <form method="post" action="{% url 'checkout' %}">
+                {% csrf_token %}
+
+                <div class="checkout-actions">
+                    <button type="submit">
+                        Confirm Order
+                    </button>
+
+                    <a
+                        href="{% url 'cart' %}"
+                        role="button"
+                        class="secondary outline"
+                    >
+                        Back to Cart
+                    </a>
+                </div>
+            </form>
+        {% endif %}
+
+        <footer>
+            <hr>
+            <small class="muted">
+                © Toyspedia — Pokémon Cards, LEGO & Gundam and More!
+            </small>
+        </footer>
+
+    </main>
+</body>
+</html>

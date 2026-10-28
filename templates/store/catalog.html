@@ -1,0 +1,145 @@
+{% load humanize %}
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="UTF-8" />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Product Catalog</title>
+
+		<style>
+			[data-theme="light"],
+			:root:not([data-theme="dark"]) {
+				--pico-primary: #d62828;
+				--pico-primary-background: #d62828;
+				--pico-primary-border: #d62828;
+				--pico-primary-hover: #b71c1c;
+				--pico-primary-hover-background: #b71c1c;
+				--pico-primary-hover-border: #b71c1c;
+				--pico-primary-focus: rgba(214, 40, 40, 0.25);
+				--pico-primary-inverse: #fff;
+			}
+			.products {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+				gap: 1.5rem;
+			}
+
+			.product-card {
+				margin: 0;
+				padding: 1rem;
+			}
+
+			.product-card img {
+				width: 100%;
+				height: 220px;
+				object-fit: contain;
+				display: block;
+				margin-bottom: 1rem;
+			}
+
+			.product-card h2 {
+				font-size: 1.25rem;
+				margin-bottom: 0.5rem;
+			}
+
+			.product-card .category {
+				color: var(--pico-muted-color);
+				font-size: 0.9rem;
+				margin-bottom: 0.5rem;
+			}
+
+			.product-card .price {
+				font-size: 1.1rem;
+				font-weight: bold;
+				margin-bottom: 0.75rem;
+			}
+
+			.product-card .stock {
+				font-size: 0.9rem;
+				margin-bottom: 1rem;
+			}
+
+			.product-card [role="button"] {
+				width: 100%;
+				margin-bottom: 0;
+			}
+
+      .category-nav {
+				display: flex;
+				gap: 0.75rem;
+				flex-wrap: wrap;
+				margin-bottom: 2rem;
+			}
+
+			.category-nav a {
+				margin-bottom: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<main class="container">
+			<nav>
+				<ul>
+					<li>
+						<strong>Product Catalog</strong>
+					</li>
+				</ul>
+
+				<ul>
+					<li>
+						<a href="{% url 'cart' %}" role="button"> 🛒 Cart </a>
+					</li>
+				</ul>
+			</nav>
+
+
+			<nav class="category-nav">
+				<a href="/products/" role="button"> All </a>
+
+				{% for category in categories %}
+				<a
+					href="/products/?category={{ category.slug }}"
+					role="button"
+					class="secondary">
+					{{ category.name }}
+				</a>
+				{% endfor %}
+			</nav>
+			<div class="products">
+				{% for product in products %}
+				<article class="product-card">
+					<a href="{% url 'product_detail' product.slug %}">
+						<img src="{{ product.image.url }}" alt="{{ product.name }}" />
+					</a>
+
+					<h2>
+						<a href="{% url 'product_detail' product.slug %}">
+							{{ product.name }}
+						</a>
+					</h2>
+
+					<p class="category">{{ product.category.name }}</p>
+
+					<p class="price">Rp {{ product.price|floatformat:0|intcomma }}</p>
+
+					<div class="stock">
+						{% if product.stock > 0 %}
+						<span>Available</span>
+						<small>Stock: {{ product.stock }}</small>
+						{% else %}
+						<span>Out of Stock</span>
+						{% endif %}
+					</div>
+
+					<a href="{% url 'product_detail' product.slug %}" role="button">
+						View Details
+					</a>
+				</article>
+				{% endfor %}
+			</div>
+		</main>
+	</body>
+</html>
