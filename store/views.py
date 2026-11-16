@@ -1,6 +1,7 @@
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -13,6 +14,22 @@ from .models import (
     OrderItem,
 )
 
+def home(request):
+    products = Product.objects.filter(
+        is_active=True
+    ).order_by("-created_at")[:4]
+
+    categories = Category.objects.all()[:4]
+
+    return render(
+        request,
+        "store/home.html",
+        {
+            "products": products,
+            "categories": categories,
+        }
+    )
+
 
 def product_list(request):
     products = Product.objects.filter(is_active=True)
@@ -23,12 +40,19 @@ def product_list(request):
 
     categories = Category.objects.all()
 
+    # 24 products per page, so a big catalogue doesn't load all at once.
+    page = Paginator(products.select_related("category").order_by("id"), 24).get_page(
+        request.GET.get("page")
+    )
+
     return render(
         request,
         "store/catalog.html",
         {
-            "products": products,
+            "products": page,
+            "page_obj": page,
             "categories": categories,
+            "category_slug": category_slug or "",
         },
     )
 
@@ -74,8 +98,6 @@ def product_detail(request, slug):
         {"product": product},
     )
 
-
-@login_required
 
 @login_required
 def cart_view(request):

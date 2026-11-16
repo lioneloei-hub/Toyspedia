@@ -1,6 +1,7 @@
 
 from django.urls import path
 
+from .api import api_chat, api_search
 from .views import (
     product_list,
     product_detail,
@@ -37,6 +38,10 @@ urlpatterns = [
         order_confirmation,
         name="order_confirmation",
     ),
+
+    # JSON API for the chatbot and the photo search
+    path("api/chat/", api_chat, name="api_chat"),
+    path("api/search/", api_search, name="api_search"),
 
     # Product detail — keep this route last
     path(

@@ -1,0 +1,86 @@
+
+{% extends "base.html" %}
+
+{% block title %}Home - Toyspedia{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <span class="hero-label">WELCOME TO TOYSPEDIA</span>
+
+            <h1>
+                Discover your next
+                <span>favorite collectible.</span>
+            </h1>
+
+            <p>
+                Explore amazing collectibles, discover new favorites,
+                and share the joy of collecting.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{% url 'product_list' %}" class="btn-primary">
+                    Explore Collection
+                </a>
+
+                <a href="#" class="btn-secondary">
+                    Discover Our Mission
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="trending-section">
+    <div class="container">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-label">OUR COLLECTION</span>
+                <h2>Trending Products</h2>
+            </div>
+
+            <a href="{% url 'product_list' %}" class="view-all">
+                View All Products →
+            </a>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+                <article class="product-card">
+
+                    <a href="{% url 'product_detail' product.slug %}">
+                        <div class="product-image">
+                            {% if product.image %}
+                                <img
+                                    src="{{ product.image.url }}"
+                                    alt="{{ product.name }}"
+                                >
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    <div class="product-info">
+                        <span class="product-category">
+                            {{ product.category.name }}
+                        </span>
+
+                        <h3>{{ product.name }}</h3>
+
+                        <p class="product-price">
+                            Rp {{ product.price|floatformat:0 }}
+                        </p>
+                    </div>
+
+                </article>
+            {% empty %}
+                <p>No products available.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

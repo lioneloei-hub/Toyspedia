@@ -1,0 +1,14 @@
+<!-- Feature 1: chatbot. Needs store/static/store/store.js and store.css. -->
+<article id="assistant" class="feature" data-chat-url="{% url 'api_chat' %}">
+	<header>
+		<strong>Ask our assistant</strong>
+		<p class="feature-hint">Ask about our LEGO, Gunpla, Pokémon cards and games. Log in to add items to your cart.</p>
+	</header>
+
+	<div id="chat" class="chat" aria-live="polite"></div>
+
+	<form id="chat-form" class="chat-form" role="group">
+		<input id="chat-input" type="text" name="message" placeholder="e.g. Do you have Pikachu?" autocomplete="off" maxlength="1000" required>
+		<button type="submit">Send</button>
+	</form>
+</article>

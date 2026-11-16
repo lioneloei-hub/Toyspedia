@@ -1,0 +1,98 @@
+/* Styles for the two features on the catalog page. Pico handles the rest. */
+
+.features {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+
+.feature {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.feature header { margin-bottom: 0; }
+.feature-hint {
+	color: var(--pico-muted-color);
+	font-size: 0.9rem;
+	margin: 0.25rem 0 0;
+}
+
+/* ----- chatbot ----- */
+.chat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	height: 320px;
+	overflow-y: auto;
+	padding: 0.5rem;
+	background: #f4f5f7;
+	border-radius: var(--pico-border-radius);
+}
+
+.bubble {
+	max-width: 85%;
+	padding: 0.5rem 0.75rem;
+	border-radius: 12px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+.bubble.user { align-self: flex-end; background: #d62828; color: #fff; }
+.bubble.assistant { align-self: flex-start; background: #fff; border: 1px solid #e0e0e0; }
+.bubble.typing { color: var(--pico-muted-color); font-style: italic; }
+.bubble.error { align-self: stretch; background: #fdecea; color: #8a1c1c; }
+
+.chat-form,
+.search-form {
+	display: flex;
+	gap: 0.5rem;
+	margin: 0;
+}
+.chat-form input { flex: 1; margin-bottom: 0; }
+.chat-form button,
+.search-form button { margin-bottom: 0; width: auto; }
+.search-form input[type="file"] { flex: 1; margin-bottom: 0; }
+
+/* ----- image search ----- */
+.preview {
+	max-height: 180px;
+	object-fit: contain;
+	border-radius: var(--pico-border-radius);
+}
+
+.status { margin: 0; color: var(--pico-muted-color); }
+
+.results {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 0.75rem;
+}
+
+.result {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	font-size: 0.9rem;
+}
+.result img {
+	width: 100%;
+	height: 140px;
+	object-fit: contain;
+	background: #f4f5f7;
+	border-radius: var(--pico-border-radius);
+}
+.result a { font-weight: bold; }
+.result span { color: var(--pico-muted-color); }
+
+/* ----- pagination ----- */
+.pager {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+	margin: 2rem 0;
+}
+.pager a { margin-bottom: 0; }

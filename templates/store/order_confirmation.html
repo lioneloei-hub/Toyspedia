@@ -1,0 +1,181 @@
+
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Confirmation | Lionel Store</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+
+    <style>
+        :root {
+            --pico-primary: #d62828;
+            --pico-primary-background: #d62828;
+            --pico-primary-border: #d62828;
+        }
+
+        body {
+            background-color: #f8f8f8;
+        }
+
+        main.container {
+            max-width: 760px;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-title {
+            color: #218838;
+        }
+
+        .order-number {
+            font-size: 1.1rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .muted {
+            color: #777;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #d62828;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            background-color: #fff0d9;
+            color: #8a5700;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .order-item {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+
+        <nav>
+            <ul>
+                <li>
+                    <strong style="color: #d62828;">
+                        Toyspedia
+                    </strong>
+                </li>
+            </ul>
+        </nav>
+
+        <article>
+            <header>
+                <div class="success-icon">✓</div>
+
+                <h1 class="success-title">
+                    Order Placed Successfully!
+                </h1>
+
+                <p>
+                    Thank you for shopping with Lionel Store.
+                    Your order has been recorded successfully.
+                </p>
+            </header>
+
+            <section>
+                <p class="order-number">
+                    Order Number:
+                    <strong>#{{ order.id }}</strong>
+                </p>
+
+                <p>
+                    Order Date:
+                    <strong>
+                        {{ order.created_at|date:"d M Y, H:i" }}
+                    </strong>
+                </p>
+
+                <p>
+                    Status:
+                    <span class="status">
+                        {{ order.get_status_display }}
+                    </span>
+                </p>
+            </section>
+
+            <hr>
+
+            <h2>Order Items</h2>
+
+            {% for item in order.items.all %}
+                <div class="order-item">
+                    <div>
+                        <strong>{{ item.product.name }}</strong>
+
+                        <p class="muted">
+                            {{ item.quantity }} ×
+                            Rp {{ item.price|floatformat:0|intcomma }}
+                        </p>
+                    </div>
+
+                    <strong>
+                        Rp {{ item.subtotal|floatformat:0|intcomma }}
+                    </strong>
+                </div>
+
+                <hr>
+            {% empty %}
+                <p class="muted">
+                    No items found for this order.
+                </p>
+            {% endfor %}
+
+            <div class="total-row">
+                <span>Total</span>
+
+                <span>
+                    Rp {{ order.total|floatformat:0|intcomma }}
+                </span>
+            </div>
+
+            <footer>
+                <a href="{% url 'product_list' %}" role="button">
+                    Continue Shopping
+                </a>
+            </footer>
+        </article>
+
+        <p class="muted" style="text-align: center;">
+            © Tosypedia — Pokémon Cards, LEGO & Gundam and More!
+        </p>
+
+    </main>
+</body>
+</html>

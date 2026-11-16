@@ -1,0 +1,51 @@
+
+<header class="site-header">
+    <nav class="navbar">
+
+        <a href="{% url 'home' %}" class="navbar-brand">
+            Toyspedia<span>.</span>
+        </a>
+
+        <button
+            class="menu-toggle"
+            id="menuToggle"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            aria-controls="navbarContent"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="navbar-content" id="navbarContent">
+
+            <div class="navbar-menu">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'product_list' %}">Shop</a>
+                <a href="#">Our Mission</a>
+                <a href="#">About Us</a>
+            </div>
+
+            <div class="navbar-actions">
+                {% if user.is_authenticated %}
+                    <span class="navbar-user">
+                        Hi, {{ user.username }}
+                    </span>
+
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+
+                <a href="{% url 'cart' %}" class="cart-link">
+                    Cart
+                </a>
+            </div>
+
+        </div>
+    </nav>
+</header>

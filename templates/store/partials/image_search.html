@@ -1,0 +1,16 @@
+<!-- Feature 2: reverse image search. Needs store/static/store/store.js and store.css. -->
+<article id="image-search" class="feature" data-search-url="{% url 'api_search' %}">
+	<header>
+		<strong>Search by photo</strong>
+		<p class="feature-hint">Upload a photo of a toy or card and we'll show the closest matches in our shop.</p>
+	</header>
+
+	<form id="search-form" class="search-form" role="group">
+		<input id="search-input" type="file" name="image" accept="image/*" required>
+		<button type="submit">Search</button>
+	</form>
+
+	<img id="preview" class="preview" alt="Your photo" hidden>
+	<p id="search-status" class="status" role="status"></p>
+	<div id="results" class="results"></div>
+</article>

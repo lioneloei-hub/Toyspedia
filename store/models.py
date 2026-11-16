@@ -27,11 +27,18 @@ class Product(models.Model):
     )
     stock = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to="products/")
+    # Image-search fingerprint (384 numbers from DINOv2), filled in by
+    # `python manage.py build_embeddings`. Empty until that command runs.
+    embedding = models.JSONField(null=True, blank=True, editable=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("product_detail", kwargs={"slug": self.slug})
 
 
 class Cart(models.Model):
